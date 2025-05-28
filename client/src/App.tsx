@@ -1,10 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, CssBaseline } from '@mui/material';
+import { ThemeProvider, CssBaseline, createTheme } from '@mui/material';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // Pages
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import TaskDetails from './pages/TaskDetails';
 

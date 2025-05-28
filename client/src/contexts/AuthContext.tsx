@@ -37,16 +37,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const register = async (credentials: RegisterCredentials) => {
-    const response = await auth.register(
-      credentials.username,
-      credentials.email,
-      credentials.password
-    );
-    const { token, user } = response.data;
-    
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    setUser(user);
+    try {
+      console.log('AuthContext: Attempting registration');
+      const response = await auth.register(
+        credentials.username,
+        credentials.email,
+        credentials.password
+      );
+      console.log('AuthContext: Registration successful', response.data);
+      const { token, user } = response.data;
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      setUser(user);
+    } catch (error) {
+      console.error('AuthContext: Registration error:', error);
+      throw error;
+    }
   };
 
   const logout = () => {

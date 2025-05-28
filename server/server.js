@@ -15,19 +15,18 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? 'https://your-app-name.onrender.com' 
+    ? 'https://task-manager-znne.onrender.com' 
     : 'http://localhost:3000'
 }));
 app.use(express.json());
 
 // MongoDB Atlas connection string
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://papeniang07:dRLgtCJgwd8vQovk@cluster0.gallbwg.mongodb.net/?retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://Task-app:YXiysrArhNkzcvis@cluster0.ulj6x.mongodb.net/task-manager?retryWrites=true&w=majority&appName=Cluster0';
 
 // Database connection
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
-  dbName: 'task-manager'
+  useUnifiedTopology: true
 })
 .then(() => console.log('Connected to MongoDB Atlas'))
 .catch((err) => console.error('MongoDB connection error:', err));

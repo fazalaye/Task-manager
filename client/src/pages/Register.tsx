@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -10,6 +10,7 @@ import {
   Button,
   Link,
   Paper,
+  Alert,
 } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 import { RegisterCredentials } from '../types';
@@ -32,6 +33,8 @@ const validationSchema = yup.object({
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const [error, setError] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -42,11 +45,26 @@ const Register: React.FC = () => {
     validationSchema: validationSchema,
     onSubmit: async (values: RegisterCredentials) => {
       try {
+        console.log('Attempting registration with values:', { ...values, password: '***' });
+        setError('');
+        setIsLoading(true);
         await register(values);
+        console.log('Registration successful');
         navigate('/');
-      } catch (error) {
+      } catch (error: any) {
         console.error('Registration failed:', error);
-        // Handle error (show message to user)
+        console.error('Error details:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status
+        });
+        setError(
+          error.response?.data?.message || 
+          error.message || 
+          'Registration failed. Please try again.'
+        );
+      } finally {
+        setIsLoading(false);
       }
     },
   });
@@ -74,6 +92,11 @@ const Register: React.FC = () => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
+          {error && (
+            <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+              {error}
+            </Alert>
+          )}
           <Box
             component="form"
             onSubmit={formik.handleSubmit}
@@ -122,8 +145,9 @@ const Register: React.FC = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={isLoading}
             >
-              Sign Up
+              {isLoading ? 'Signing up...' : 'Sign Up'}
             </Button>
             <Box sx={{ textAlign: 'center' }}>
               <Link component={RouterLink} to="/login" variant="body2">
