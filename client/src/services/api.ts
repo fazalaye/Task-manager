@@ -1,13 +1,10 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5002/api';
-console.log('API URL:', API_URL);
-
 const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL:
+    process.env.NODE_ENV === 'production'
+      ? 'https://task-manager-znne.onrender.com/api'
+      : 'http://localhost:5002/api'
 });
 
 // Add request interceptor for logging
